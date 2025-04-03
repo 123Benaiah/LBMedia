@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Register</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        /* Video Background */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        /* Overlay for better readability */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        /* Main container */
+        .auth-container {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Book flip container */
+        .flip-container {
+            perspective: 1200px;
+            width: 100%;
+            max-width: 400px;
+            height: 500px;
+        }
+
+        .flipper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* Front and back forms */
+        .auth-card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+        }
+
+        #register-form {
+            transform: rotateY(180deg);
+        }
+
+        /* Form elements with blue bottom borders */
+        .form-control {
+            padding: 12px 15px;
+            border: none;
+            border-bottom: 2px solid #3b71ca !important;
+            background-color: transparent;
+            border-radius: 0;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: none;
+        }
+
+        .form-control::placeholder {
+            color: #5a6268;
+            opacity: 1 !important;
+            font-weight: 400;
+        }
+
+        .form-control:focus {
+            border-bottom: 2px solid #2c5aa8;
+        }
+
+        .btn-auth {
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login {
+            background-color: #3b71ca;
+        }
+
+        .btn-login:hover {
+            background-color: #2c5aa8 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-register {
+            background-color: #14a44d;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .auth-header {
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .auth-link {
+            color: #3b71ca;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .auth-link:hover {
+            color: #2c5aa8;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background Video -->
+    <video class="video-background" autoplay loop muted playsinline>
+        <source src="{{ asset('storage/media/videos/background.mp4') }}" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+
+    <!-- Dark Overlay -->
+    <div class="overlay"></div>
+
+    <section class="auth-container">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-8 col-lg-6 col-xl-5">
+                    <div class="flip-container">
+                        <div class="flipper" id="flipper">
+                            <!-- Login Form (Front) -->
+                            <div class="auth-card" id="login-form">
+                                <h3 class="auth-header text-center">Login</h3>
+                                <form method="POST" action="{{ route('login') }}">
+                                    @csrf
+                                    <div class="form-outline mb-4">
+                                        <input type="email" id="loginEmail" name="email" class="form-control" placeholder="Email address" required />
+                                    </div>
+
+                                    <div class="form-outline mb-4">
+                                        <input type="password" id="loginPassword" name="password" class="form-control" placeholder="Password" required />
+                                    </div>
+
+                                    <div class="text-center mb-3">
+                                        <button class="btn btn-login btn-auth btn-block text-white" type="submit">
+                                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                                        </button>
+                                    </div>
+                                </form>
+
+                                <div class="text-center">
+                                    <a href="{{ route('password.request') }}" class="auth-link">Forgot password?</a>
+                                    <span class="mx-2">•</span>
+                                    <a href="#" class="auth-link" onclick="toggleForm()">Create account</a>
+                                </div>
+                            </div>
+
+                            <!-- Register Form (Back) -->
+                            <div class="auth-card" id="register-form">
+                                <h3 class="auth-header text-center">Create Account</h3>
+                                <form method="POST" action="{{ route('register') }}">
+                                    @csrf
+                                    <div class="form-outline mb-4">
+                                        <input type="text" id="registerName" name="name" class="form-control" placeholder="Full Name" required />
+                                    </div>
+
+                                    <div class="form-outline mb-4">
+                                        <input type="email" id="registerEmail" name="email" class="form-control" placeholder="Email address" required />
+                                    </div>
+
+                                    <div class="form-outline mb-4">
+                                        <input type="password" id="registerPassword" name="password" class="form-control" placeholder="Password" required />
+                                    </div>
+
+                                    <div class="form-outline mb-4">
+                                        <input type="password" id="confirmPassword" name="password_confirmation" class="form-control" placeholder="Confirm Password" required />
+                                    </div>
+
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger mb-4">
+                                            <ul class="mb-0">
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
+
+                                    <div class="text-center mb-3">
+                                        <button class="btn btn-register btn-auth btn-block text-white" type="submit">
+                                            <i class="fas fa-user-plus me-2"></i>Register
+                                        </button>
+                                    </div>
+                                </form>
+
+                                <div class="text-center">
+                                    <a href="#" class="auth-link" onclick="toggleForm()">Already have an account?</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function toggleForm() {
+            const flipper = document.getElementById('flipper');
+            flipper.classList.toggle('flipped');
+        }
+    </script>
+</body>
+</html>
