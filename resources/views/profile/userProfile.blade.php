@@ -96,10 +96,11 @@
                                         <div class="row mb-3">
                                             <label for="current_password" class="col-md-4 col-form-label">Current
                                                 Password</label>
-                                            <div class="col-md-8">
+                                            <div class="col-md-8 position-relative">
                                                 <input name="current_password" type="password"
                                                     class="form-control @error('current_password') is-invalid @enderror"
                                                     id="current_password" required>
+                                                <i class="bi bi-eye-slash toggle-password" toggle="#current_password"></i>
                                                 @error('current_password')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -108,10 +109,11 @@
 
                                         <div class="row mb-3">
                                             <label for="password" class="col-md-4 col-form-label">New Password</label>
-                                            <div class="col-md-8">
+                                            <div class="col-md-8 position-relative">
                                                 <input name="password" type="password"
                                                     class="form-control @error('password') is-invalid @enderror"
                                                     id="password" required>
+                                                <i class="bi bi-eye-slash toggle-password" toggle="#password"></i>
                                                 @error('password')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -121,9 +123,11 @@
                                         <div class="row mb-3">
                                             <label for="password_confirmation" class="col-md-4 col-form-label">Confirm
                                                 Password</label>
-                                            <div class="col-md-8">
+                                            <div class="col-md-8 position-relative">
                                                 <input name="password_confirmation" type="password" class="form-control"
                                                     id="password_confirmation" required>
+                                                <i class="bi bi-eye-slash toggle-password"
+                                                    toggle="#password_confirmation"></i>
                                             </div>
                                         </div>
 
@@ -162,5 +166,32 @@
             </div>
         </div>
     </div>
+
     @include('profile.profile-components')
+
+    <!-- Password Toggle Styles -->
+    <style>
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            z-index: 2;
+            color: #6c757d;
+        }
+    </style>
+
+    <!-- Password Toggle Script -->
+    <script>
+        document.querySelectorAll('.toggle-password').forEach(function (icon) {
+            icon.addEventListener('click', function () {
+                const targetInput = document.querySelector(this.getAttribute('toggle'));
+                const type = targetInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                targetInput.setAttribute('type', type);
+                this.classList.toggle('bi-eye');
+                this.classList.toggle('bi-eye-slash');
+            });
+        });
+    </script>
 @endsection

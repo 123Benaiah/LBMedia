@@ -10,30 +10,14 @@
 </head>
 
 <body>
-    @include('includes.header') <!-- Header Section -->
-
-    @include('includes.sidebar') <!-- Sidebar -->
+    @include('includes.welcome-header') <!-- Header Section -->
 
     <main id="main" class="main">
         @yield('content') <!-- Main Content -->
     </main>
 
-    @include('includes.footer') <!-- Footer -->
+    @include('includes.welcome-footer') <!-- Footer -->
 
-    <!-- Authentication Links
-    <div class="auth-links">
-        @auth
-
-            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                @csrf
-                <button type="submit" class="btn btn-danger">Logout</button>
-            </form>
-        @else
-           
-            <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
-        @endauth
-    </div>
-    -->
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center">
         <i class="bi bi-arrow-up-short"></i>
     </a>

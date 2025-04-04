@@ -2,70 +2,103 @@
 
 @section('content')
     @include('includes.flash-mesages')
-    <h3 class="text-center mt-4">Audio Files</h3>
 
-     <!-- Button to trigger modal -->
-     <div class="mt-4 mb-4">
-        <!-- Upload Video Button -->
+    <h3 class="container mt-4 mb-4">Audio Files</h3>
+
+    <!-- Upload Button -->
+    <div class="container mt-4 mb-3">
         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#uploadMediaModal">
-            <i class="bi bi-upload me-2"></i> Upload
-            <i class="bi bi-camera-reels mx-1"></i>
+           Upload  <i class="bi bi-headphones"></i>
         </button>
     </div>
-    <!-- Search Bar at the Bottom -->
-    <div class="search-bar mt-3 mb-4">
-        <form action="{{ route('media.index') }}" method="GET" class="d-flex">
+
+    <!-- Search Bar -->
+    <div class="container mt-3 mb-3">
+        <form action="{{ route('media.index') }}" method="GET">
             <div class="input-group">
-                <input type="text" name="search" class="form-control rounded-start" placeholder="Search by title"
-                    aria-label="Search">
-                <button type="submit" class="btn btn-outline-secondary rounded-end">
-                    <i class="bi bi-search"></i>
-                </button>
+                <input type="text" id="searchInput" name="search" class="form-control form-control-sm" placeholder="Search by title">
             </div>
         </form>
     </div>
 
-    <!-- upload the Modal -->
     @include('media.create')
 
-    @foreach ($item as $item)
-        @if ($item->type === 'audio')
-            <div class="d-flex align-items-center gap-4 mb-3 border p-3 rounded">
-                <i class="bi bi-music-note-beamed audio-icon"></i>{{ $item->title }}
+    <!-- Audio File Grid -->
+    <div class="container">
+        <div class="row">
+            @foreach ($item as $media)
+                @if ($media->type === 'audio')
+                    <div class="col-6 col-md-4 col-lg-3 mb-3 media-item">
+                        <div class="card h-100 small-card">
+                            <div class="card-body text-center p-2">
+                                <!-- Title (Wraps if too long) -->
+                                <h6 class="card-title media-title mt-2 text-truncate" title="{{ $media->title }}">
+                                    <i class="bi bi-headphones"></i>
+                                    {{ Str::limit($media->title, 25) }}
+                                </h6>
 
-                <!-- Media Preview for Audio
-                <div class="media-preview">
-                    <audio controls>
-                        <source src="{{ asset('storage/' . $item->file_path) }}" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-            -->
+                                <!-- Action Buttons -->
+                                <div class="d-flex justify-content-center mt-2">
+                                    <!-- View Button -->
+                                    <button class="btn btn-info btn-sm me-1" data-bs-toggle="modal" data-bs-target="#viewMediaModal-{{ $media->id }}">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
 
-                <!-- Media Details -->
-                <div class="d-flex align-items-center ms-auto">
-                    <!-- View Button -->
-                    <button type="button" class="btn btn-info btn-sm me-2" data-bs-toggle="modal" data-bs-target="#viewMediaModal-{{ $item->id }}">
-                        <i class="bi bi-eye"></i> View
-                    </button>
+                                    <!-- Delete Button -->
+                                    <form action="{{ route('media.destroy', $media->id) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @include('media.view', ['item' => $media])
+                @endif
+            @endforeach
+        </div>
+    </div>
 
-                    <!-- Delete Button -->
-                    <form action="{{ route('media.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this file?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            <i class="bi bi-trash3-fill"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
+    <div class="container text-center mt-3">
+        <button id="backButton" class="btn btn-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Back
+        </button>
+    </div>
 
-            <!-- View Media Modal -->
-            @include('media.view', ['item' => $item])
-        @endif
-    @endforeach
-    <button id="backButton" class="btn btn-secondary">
-        <i class="bi bi-arrow-left"></i> Back
-    </button>
     @include('includes.back-button')
+    <!-- JavaScript for Real-time Search -->
+    @include('includes.searchMedia')
+
+    <style>
+        .small-card {
+            height: 170px; /* Make card smaller */
+            max-width: 220px;
+        }
+
+        .small-card .card-title {
+            font-size: 0.9rem; /* Reduce title font size */
+            white-space: normal; /* Allow wrapping */
+            word-break: break-word; /* Wrap long words */
+            overflow-wrap: break-word;
+            line-height: 1.2;
+        }
+
+        .small-audio {
+            height: 25px; /* Reduce audio player size */
+        }
+
+        .btn-sm {
+            padding: 4px 6px; /* Make buttons smaller */
+            font-size: 0.8rem;
+        }
+
+        .search-bar {
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
 @endsection

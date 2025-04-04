@@ -3,9 +3,6 @@
 @section('content')
     @include('includes.flash-mesages')
 
-    <!-- Image Cards Slider -->
-
-
     <!-- Upload Button -->
     <div class="container mt-4 mb-4">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadMediaModal">
@@ -17,7 +14,7 @@
     <div class="container mt-3 mb-7">
         <form action="{{ route('media.index') }}" method="GET">
             <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Search by title">
+                <input type="text" id="searchInput" name="search" class="form-control" placeholder="Search by title">
                 <button type="submit" class="btn btn-outline-secondary">
                     <i class="bi bi-search"></i>
                 </button>
@@ -30,10 +27,10 @@
     <div class="container">
         <h3 class="text-center mt-4 mb-4">All Image Files</h3>
 
-        <div class="row">
+        <div class="row" id="mediaContainer">
             @foreach ($images as $media)
                 @if ($media->type === 'image')
-                    <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="col-md-6 col-lg-4 mb-4 media-item">
                         <div class="card h-100">
                             <div class="card-body d-flex align-items-center">
                                 <i class="bi bi-image fs-3 me-3"></i>
@@ -69,29 +66,28 @@
 
     @include('includes.back-button')
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let searchInput = document.getElementById("searchInput");
+            let mediaItems = document.querySelectorAll(".media-item");
+
+            searchInput.addEventListener("keyup", function() {
+                let searchText = searchInput.value.toLowerCase();
+
+                mediaItems.forEach(function(item) {
+                    let title = item.querySelector(".card-title").innerText.toLowerCase();
+
+                    if (title.includes(searchText)) {
+                        item.style.display = "block";
+                    } else {
+                        item.style.display = "none";
+                    }
+                });
+            });
+        });
+    </script>
+
     <style>
-        .scrollable-row {
-            scrollbar-width: thin;
-            scrollbar-color: #adb5bd #f8f9fa;
-        }
-
-        .scrollable-row::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .scrollable-row::-webkit-scrollbar-track {
-            background: #f8f9fa;
-        }
-
-        .scrollable-row::-webkit-scrollbar-thumb {
-            background-color: #adb5bd;
-            border-radius: 20px;
-        }
-
-        .card-img-overlay {
-            background: linear-gradient(to top, rgba(0,0,0,0.7) 20%, transparent 50%);
-        }
-
         .search-bar {
             max-width: 500px;
             margin-left: auto;

@@ -12,6 +12,10 @@
 <!-- Lottie Files for animation -->
 <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+
 <!-- Template Main JS File -->
 <script src="{{ asset('assets/js/main.js') }}"></script>
 @yield('script')

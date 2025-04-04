@@ -676,6 +676,10 @@ h6 {
   #footer {
     margin-left: 300px;
   }
+  #footer-welcome{
+    margin-left: 1px;
+  }
+
 }
 
 @media (max-width: 1199px) {
