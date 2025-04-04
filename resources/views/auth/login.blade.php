@@ -105,17 +105,15 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="d-flex justify-content-center flex-wrap gap-3 mt-5">
-                        <a href="{{ route('register') }}" class="btn btn-primary px-4 py-3">
+                        <button class="btn btn-primary px-4 py-3" data-mdb-toggle="modal" data-mdb-target="#registerModal">
                             Get Started - It's Free
-                        </a>
-                        <a href="{{ route('login') }}" class="btn btn-outline-primary px-4 py-3">
+                        </button>
+                        @include('auth.register')
+                        <button class="btn btn-outline-primary px-4 py-3" data-mdb-toggle="modal" data-mdb-target="#loginModal">
                             Login
-                        </a>
+                        </button>
                     </div>
-
-
                 </div>
             </div>
         </div>
